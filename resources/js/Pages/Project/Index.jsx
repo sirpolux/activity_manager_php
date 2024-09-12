@@ -1,3 +1,7 @@
+import Pagination from "@/Components/Pagination"
+import SelectInput from "@/Components/SelectInput"
+import TextInput from "@/Components/TextInput"
+import { PROJECT_STATUS_CLASS_MAP, PROJECT_STATUS_TEXT_MAP } from "@/constants"
 import Authenticated from "@/Layouts/AuthenticatedLayout"
 import { Head, Link } from "@inertiajs/react"
 
@@ -26,15 +30,31 @@ export default function Index({auth,projects}){
                                                 <th className="px-3 py-2">Actions</th>
                                             </tr>
                                         </thead>
+                                        <thead className="text-xs text-gray-700 uppercase">
+                                            <tr className="text-nowrap bg-gray-500">
+                                                <th className="px-3 py-2"></th>
+                                                <th className="px-3 py-2"></th>
+                                                <th className="px-3 py-2">
+                                                    <TextInput className="w-full" placeholder="Project name" />
+                                                </th>
+                                                <th className="px-3 py-2">
+                                                    <SelectInput  className="w-full" /> 
+                                                    </th>
+                                                <th className="px-3 py-2"></th>
+                                                <th className="px-3 py-2"></th>
+                                                <th className="px-3 py-2"></th>
+                                                <th className="px-3 py-2"></th>
+                                            </tr>
+                                        </thead>
                                         <tbody>
                                             {projects.data.map((project)=>(
-                                                <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                                <tr key={project.id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                                                     <th className="px-3 py-2">{project.id}</th>
                                                     <td className="px-3 py-2">
                                                         <img src={project.image_path} alt="" style={{width:60}} />
                                                     </td>
                                                     <td className="px-3 py-2">{project.name}</td>
-                                                    <td className="px-3 py-2">{project.status}</td>
+                                                    <td className="px-3 py-2"><span className={"px-2 py-1 rounded text-white "+ PROJECT_STATUS_CLASS_MAP[project.status]}> {PROJECT_STATUS_TEXT_MAP[project.status]}</span></td>
                                                     <td className="px-3 py-2">{project.created_at}</td>
                                                     <td className="px-3 py-2">{project.due_date}</td>
                                                     <td className="px-3 py-2">{project.createdBy.name}</td>
@@ -53,6 +73,10 @@ export default function Index({auth,projects}){
                                           
                                         </tbody>
                                     </table>
+                                    {/* <pre>
+                                        {JSON.stringify(projects, undefined, 2)}
+                                    </pre> */}
+                                    <Pagination links={projects.meta.links} />
                                 </div>
                             </div>
                         </div>
