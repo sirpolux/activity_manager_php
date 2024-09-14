@@ -3,9 +3,39 @@ import SelectInput from "@/Components/SelectInput"
 import TextInput from "@/Components/TextInput"
 import { PROJECT_STATUS_CLASS_MAP, PROJECT_STATUS_TEXT_MAP } from "@/constants"
 import Authenticated from "@/Layouts/AuthenticatedLayout"
-import { Head, Link } from "@inertiajs/react"
+import { Head, Link, router } from "@inertiajs/react"
 
-export default function Index({auth,projects}){
+export default function Index({auth,projects, queryParams=null}){
+    queryParams = queryParams || {};
+    const searchFieldChanged=(name, value)=>{
+        if(value){
+            queryParams[name]= value
+        }else{
+            delete queryParams[name]
+        }
+
+        router.get(route('project.index'), queryParams);
+    }
+
+    const onKeyPress = (name, e)=>{
+        if(e.key !== 'Enter') return;
+        searchFieldChanged(name, e.target.value)
+    }
+
+    const sortChange=(name)=>{
+        if (name === queryParams.sort_field){
+            if(queryParams.sort_direction==="asc"){
+                queryParams.sort_direction="desc";
+            }else{
+                queryParams.sort_direction="asc"
+            }
+        }else{
+            queryParams.sort_field=name;
+            queryParams.sort_direction="asc";
+        }
+        router.get(route("project.index"), queryParams);
+    }
+
     return (
         <Authenticated
             user={auth.user}
@@ -20,12 +50,12 @@ export default function Index({auth,projects}){
                                     <table className="w-full text-sm">
                                         <thead className="text-xs text-gray-700 uppercase">
                                             <tr className="text-nowrap bg-gray-500">
-                                                <th className="px-3 py-2">ID</th>
+                                                <th className="px-3 py-2" onClick={e=>sortChange('id')} >ID</th>
                                                 <th className="px-3 py-2">Image</th>
-                                                <th className="px-3 py-2">Name</th>
-                                                <th className="px-3 py-2">Status</th>
-                                                <th className="px-3 py-2">Create Date</th>
-                                                <th className="px-3 py-2">Due date</th>
+                                                <th className="px-3 py-2" onClick={(e)=>sortChange('name')} >Name</th>
+                                                <th className="px-3 py-2" onClick={(e)=>sortChange('status')}>Status</th>
+                                                <th className="px-3 py-2" onClick={(e)=>sortChange('create_date')}>Create Date</th>
+                                                <th className="px-3 py-2"onClick={(e)=>sortChange('due_day')} >Due date</th>
                                                 <th className="px-3 py-2">Created by</th>
                                                 <th className="px-3 py-2">Actions</th>
                                             </tr>
@@ -35,10 +65,24 @@ export default function Index({auth,projects}){
                                                 <th className="px-3 py-2"></th>
                                                 <th className="px-3 py-2"></th>
                                                 <th className="px-3 py-2">
-                                                    <TextInput className="w-full" placeholder="Project name" />
+                                                    <TextInput className="w-full" placeholder="Project name" 
+                                                    onBlur={e=>searchFieldChanged('name', e.target.value)}
+                                                    defaultValue={queryParams.name}
+                                                    onKeyPress={e=>onKeyPress('name', e) }
+                                                    />
                                                 </th>
                                                 <th className="px-3 py-2">
-                                                    <SelectInput  className="w-full" /> 
+                                                    <SelectInput  
+                                                        className="w-full" 
+                                                        onChange={e=>searchFieldChanged('status',e.target.value)}
+                                                        defaultValue={queryParams.status}
+                                                        >
+                                                        <option value="">Select status</option>
+                                                        <option value="pending">Pending</option>
+                                                        <option value="in_progress">In Progress</option>
+                                                        <option value="completed">Completed</option>
+                                                    </SelectInput>
+
                                                     </th>
                                                 <th className="px-3 py-2"></th>
                                                 <th className="px-3 py-2"></th>
