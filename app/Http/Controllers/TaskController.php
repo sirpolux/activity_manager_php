@@ -17,7 +17,7 @@ class TaskController extends Controller
         //
                 
         $query=Task::query();
-        $sortField= request("sort_field", "created_at");
+        $sortField= request("sort_field", "id");
         $sortDirection = request("sort_direction", "desc");
 
         if(request("name")){
@@ -30,7 +30,7 @@ class TaskController extends Controller
 
         $tasks=$query->orderBy($sortField, $sortDirection)->paginate(10)->onEachSide(1);
         
-        return inertia('Project/Index',[
+        return inertia('Task/Index',[
             'tasks'=>(TaskResource::collection($tasks)),
             'queryParams'=>request()->query() ?:null,
         ]);
