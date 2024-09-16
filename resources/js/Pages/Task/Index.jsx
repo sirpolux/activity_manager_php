@@ -10,35 +10,7 @@ import TaskTable from "./TaskTable"
 
 
 export default function Index({auth,tasks, queryParams=null}){
-    queryParams = queryParams || {};
-    const searchFieldChanged=(name, value)=>{
-        if(value){
-            queryParams[name]= value
-        }else{
-            delete queryParams[name]
-        }
-
-        router.get(route('task.index'), queryParams);
-    }
-
-    const onKeyPress = (name, e)=>{
-        if(e.key !== 'Enter') return;
-        searchFieldChanged(name, e.target.value)
-    }
-
-    const sortChange=(name)=>{
-        if (name === queryParams.sort_field){
-            if(queryParams.sort_direction==="asc"){
-                queryParams.sort_direction="desc";
-            }else{
-                queryParams.sort_direction="asc"
-            }
-        }else{
-            queryParams.sort_field=name;
-            queryParams.sort_direction="asc";
-        }
-        router.get(route("task.index"), queryParams);
-    }
+    
 
     return (
         <Authenticated
@@ -53,9 +25,6 @@ export default function Index({auth,tasks, queryParams=null}){
                               <TaskTable 
                                 tasks={tasks}
                                 queryParams={queryParams}
-                                sortChange={sortChange}
-                                onKeyPress={onKeyPress}
-                                searchFieldChanged={searchFieldChanged}
                               />
 
                             </div>

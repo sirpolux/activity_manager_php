@@ -1,8 +1,9 @@
 import { PROJECT_STATUS_CLASS_MAP, PROJECT_STATUS_TEXT_MAP } from "@/constants";
 import Authenticated from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
+import TaskTable from "../Task/TaskTable";
 
-export default function Show({ auth, project }) {
+export default function Show({queryParams, auth, project, tasks }) {
     return (
         <Authenticated user={auth.user}
             header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">{`Project "${project.name}" `}</h2>}
@@ -70,6 +71,20 @@ export default function Show({ auth, project }) {
                                 <p className="mt-4">{project.description}</p>
                             </div>
 
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div className="py-2">
+                <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                    <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                        <div>
+                            <TaskTable 
+                            tasks={tasks}
+                            queryParams={queryParams} 
+                            hideProject={true}          
+                            />
                         </div>
                     </div>
                 </div>
